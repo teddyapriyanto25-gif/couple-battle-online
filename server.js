@@ -9,7 +9,7 @@ function code(){let c;do{c=Array.from({length:4},()=>CODE[Math.random()*CODE.len
 function state(r){return{code:r.code,game:r.game,mode:r.mode||'Online 1v1',players:r.players.map(p=>({id:p.id,name:p.name,score:p.score}))}}
 function emit(r,e,d){io.to(r.code).emit(e,d)}
 function stop(r){if(r.tick){clearInterval(r.tick);r.tick=null}}
-function resetPlayer(p,i,keepScore=false){p.x=i?700:100;p.y=330;p.hp=100;if(!keepScore)p.score=0;p.vx=0;p.vy=0;p.dir=i?-1:1;p.attack=0;p.cool=0;p.block=false;p.hitFlash=0;p.stun=0;p.lane=i?1:0;p.progress=0;p.input={left:false,right:false,jump:false,attack:false,block:false,boost:false}}
+function resetPlayer(p,i,keepScore=false){p.x=i?700:100;p.y=330;p.hp=100;if(!keepScore)p.score=0;p.vx=0;p.vy=0;p.dir=i?-1:1;p.attack=0;p.cool=0;p.block=false;p.hitFlash=0;p.stun=0;p.lane=i?1:0;p.progress=0;p.input={left:false,right:false,jump:false,attack:false,block:false,boost:false,kick:false}}
 function start(r){if(r.players.length!==2)return;stop(r);r.playing=true;r.round=0;r.winner=null;r.players.forEach((p,i)=>resetPlayer(p,i));r.roundWins=[0,0];r.roundEndsAt=Date.now()+60000;r.startedAt=Date.now();emit(r,'gameInit',{game:r.game,players:r.players.map(p=>({id:p.id,name:p.name})),round:1});r.tick=setInterval(()=>step(r),50)}
 function damage(r,att,amount,kind){
  const target=r.players.find(p=>p.id!==att.id);
@@ -48,7 +48,7 @@ s.on('joinRoom',({name,code:c})=>{const r=rooms.get(String(c||'').toUpperCase())
 s.on('selectGame',({game})=>{const r=rooms.get(s.data.room);if(!r||r.playing||!GAMES.includes(game))return;r.game=game;emit(r,'room',state(r))});
 s.on('startGame',()=>{const r=rooms.get(s.data.room);if(r&&r.players.length===2)start(r)});
 s.on('setMode',({mode})=>{const r=rooms.get(s.data.room);if(!r||r.playing||!MODES.includes(mode)||s.id!==r.players[0]?.id)return;if(mode==='VS Computer'){r.mode=mode;r.players=[r.players[0],{id:'BOT',name:'Computer 🤖'}];resetPlayer(r.players[1],1)}else{r.mode=mode;r.players=[r.players[0]]}emit(r,'room',state(r))});
-s.on('control',d=>{const r=rooms.get(s.data.room);if(!r||!r.playing)return;const p=r.players.find(x=>x.id===s.id);if(!p)return;p.input={left:!!d.left,right:!!d.right,jump:!!d.jump,attack:!!d.attack,block:!!d.block,boost:!!d.boost};if(r.game==='Mini Racing'){p.boost=!!d.boost;return}});
+s.on('control',d=>{const r=rooms.get(s.data.room);if(!r||!r.playing)return;const p=r.players.find(x=>x.id===s.id);if(!p)return;p.input={left:!!d.left,right:!!d.right,jump:!!d.jump,attack:!!d.attack,kick:!!d.kick,block:!!d.block,boost:!!d.boost,kick:!!d.kick};if(r.game==='Mini Racing'){p.boost=!!d.boost;return}});
 s.on('rematch',()=>{const r=rooms.get(s.data.room);if(r&&r.players.length===2)start(r)});
 s.on('disconnect',()=>{const r=rooms.get(s.data.room);if(!r)return;stop(r);if(r.mode==='VS Computer'&&s.id===r.players[0]?.id){rooms.delete(r.code);return}r.players=r.players.filter(p=>p.id!==s.id&&p.id!=='BOT');if(!r.players.length)rooms.delete(r.code);else{r.playing=false;emit(r,'opponentLeft');emit(r,'room',state(r))}});
 });
