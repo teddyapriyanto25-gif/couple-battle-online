@@ -36,7 +36,7 @@ button:active,button.pressed{transform:scale(.95);filter:brightness(1.2)}
 .controls{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-top:6px}
 .controls button{min-height:58px;font-size:25px}
 .controls small{display:block;font-size:9px}
-.attack{background:#ff3f6f}
+.attack{background:#ff3f6f}.kick{background:#ff8a3d}.controls small{pointer-events:none}
 .trophy{text-align:center;font-size:90px}
 @media(max-width:700px){
  main{padding:8px}
