@@ -55,7 +55,13 @@ function doAttack(r,p,kind){
  if(kind==='punch'){p.attack=12;p.attackKind='punch';p.cool=Math.ceil(18*(p.stats?.cool||1));hit(r,p,12*(p.stats?.damage||1),'punch',115,150)}
  if(kind==='kick'){p.attack=16;p.attackKind='kick';p.cool=Math.ceil(24*(p.stats?.cool||1));hit(r,p,16*(p.stats?.damage||1),'kick',130,170)}
  if(kind==='sword'){p.attack=18;p.attackKind='sword';p.cool=Math.ceil(22*(p.stats?.cool||1));hit(r,p,19*(p.stats?.damage||1),'sword',145,160)}
- if(kind==='arrow'){p.attack=12;p.attackKind='arrow';p.cool=Math.ceil(26*(p.stats?.cool||1));hit(r,p,15*(p.stats?.damage||1),'arrow',330,220)}
+ if(kind==='arrow'){
+  p.attack=12;p.attackKind='arrow';p.cool=Math.ceil(26*(p.stats?.cool||1));
+  const target=r.players.find(x=>x.id!==p.id);
+  const dir=p.dir||1;
+  emit(r,'projectile',{id:p.id,x:p.x,y:p.y-55,dir,targetId:target?.id||null});
+  hit(r,p,15*(p.stats?.damage||1),'arrow',330,220)
+}
 }
 function endRound(r,w,reason){
  if(!r.playing)return;stop(r);
