@@ -10,9 +10,9 @@ main{width:min(1100px,100%);margin:auto;padding:12px}
 h1{text-align:center;font-size:38px;margin:0}
 h2{text-align:center}
 p{text-align:center;opacity:.8}
-input{width:100%;padding:15px;margin:6px 0;border:0;border-radius:15px;font-size:16px}
+input,select{width:100%;padding:15px;margin:6px 0;border:0;border-radius:15px;font-size:16px}
 button{border:0;border-radius:15px;padding:13px;background:#ffffff18;color:#fff;font-weight:900;cursor:pointer;touch-action:none}
-button:active{transform:scale(.95)}
+button:active,button.pressed{transform:scale(.95);filter:brightness(1.2)}
 .primary{background:linear-gradient(135deg,#ff3f7f,#6d5cff)}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .hidden{display:none}
