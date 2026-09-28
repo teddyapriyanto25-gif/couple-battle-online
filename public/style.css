@@ -32,7 +32,7 @@ button:active,button.pressed{transform:scale(.95);filter:brightness(1.2)}
 .score div{background:#ffffff12;border-radius:16px;padding:8px;text-align:center}
 .score b{display:block;font-size:28px}
 #arenaHint{text-align:center;font-size:12px;font-weight:900;letter-spacing:1.7px;opacity:.72;margin:3px 0 7px}
-.arena{width:100%;height:min(68vh,760px);min-height:420px;display:block;border-radius:24px;background:#151a31;border:1px solid #ffffff18;touch-action:none}
+#arena{width:100%;height:min(68vh,760px);min-height:420px;display:block;border-radius:24px;background:#151a31;border:1px solid #ffffff18;touch-action:none}
 .message{text-align:center;font-size:19px;font-weight:800;margin:7px}
 .controls{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin:9px auto 0;max-width:1100px}
 .controls button{min-height:64px;font-size:27px}
@@ -52,7 +52,7 @@ button:active,button.pressed{transform:scale(.95);filter:brightness(1.2)}
 #portraitTip{display:none;text-align:center;font-size:12px;opacity:.7;margin:4px 0 7px;padding:7px;border-radius:10px;background:#ffffff0d}
 @media(max-width:700px){
  main{padding:8px}.logo{font-size:56px}h1{font-size:30px}#game{padding-bottom:10px}
- .arena{height:42vh;min-height:260px;max-height:430px;border-radius:18px}
+ #arena{height:42vh;min-height:260px;max-height:430px;border-radius:18px}
  .controls{grid-template-columns:repeat(3,1fr);gap:7px}.controls button{min-height:58px}
  .score{margin:5px 0}.score div{padding:5px}.score b{font-size:21px}
  #arenaHint{font-size:10px}.players div{min-height:64px}
@@ -61,20 +61,20 @@ button:active,button.pressed{transform:scale(.95);filter:brightness(1.2)}
  .roundBanner{font-size:21px}
 }
 @media(max-width:500px){
- .row,.games{grid-template-columns:1fr}.arena{height:40vh;min-height:240px}
+ .row,.games{grid-template-columns:1fr}#arena{height:40vh;min-height:240px}
  .controls button{min-height:54px;font-size:23px}.bigcode{font-size:42px}
 }
 @media (orientation:portrait) and (max-width:700px){
- #portraitTip{display:block}#game .arena{height:38vh}
+ #portraitTip{display:block}#game #arena{height:38vh}
  #game .controls{padding-bottom:env(safe-area-inset-bottom)}
  .screen.active#game{overflow:hidden}.controls{position:relative;z-index:2}
  .controls button{user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
 }
 @media (orientation:landscape) and (max-width:700px){
- #game .arena{height:58vh;min-height:220px;max-height:none}
+ #game #arena{height:58vh;min-height:220px;max-height:none}
  #game .controls{grid-template-columns:repeat(6,1fr)}
  #game .controls button{min-height:52px}.message{margin:3px;font-size:14px}
 }
 @media(min-width:701px) and (max-width:1200px){
- main{padding:16px 20px}.arena{height:min(65vh,680px)}
+ main{padding:16px 20px}#arena{height:min(65vh,680px)}
 }
