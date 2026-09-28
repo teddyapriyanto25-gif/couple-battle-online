@@ -58,3 +58,5 @@ button:active,button.pressed{transform:scale(.95);filter:brightness(1.2)}
 }
 
 @media (orientation:portrait) and (max-width:700px){#game .arena{height:38vh}#game .controls{padding-bottom:env(safe-area-inset-bottom)}}
+
+#portraitTip{display:none;text-align:center;font-size:12px;opacity:.7;margin:4px 0 7px;padding:7px;border-radius:10px;background:#ffffff0d}@media (orientation:portrait) and (max-width:700px){#portraitTip{display:block}.screen.active#game{overflow:hidden}.controls{position:relative;z-index:2}.controls button{user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}}@media (orientation:landscape) and (max-width:700px){#game .arena{height:58vh;min-height:220px;max-height:none}#game .controls{grid-template-columns:repeat(6,1fr)}#game .controls button{min-height:52px}.message{margin:3px;font-size:14px}}
