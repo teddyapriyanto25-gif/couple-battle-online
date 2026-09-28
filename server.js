@@ -3,14 +3,15 @@ const app=express(),server=http.createServer(app),io=new Server(server),rooms=ne
 app.use(express.static(path.join(__dirname,'public')));app.get('/health',(_,r)=>r.json({ok:true}));
 const GAMES=['Couple Fighter','Sword Battle','Arrow Battle','Mini Racing'];
 const MODES=['Online 1v1','VS Computer'];
+const CHARACTERS=['Raka','Alya','Bimo','Naya'];const ARENAS=['Neon City','Dojo','Beach','Rooftop'];
 const CODE='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
 function code(){let c;do{c=Array.from({length:4},()=>CODE[Math.random()*CODE.length|0]).join('')}while(rooms.has(c));return c}
-function state(r){return{code:r.code,game:r.game,mode:r.mode||'Online 1v1',players:r.players.map(p=>({id:p.id,name:p.name,score:p.score}))}}
+function state(r){return{code:r.code,game:r.game,mode:r.mode||'Online 1v1',arena:r.arena||'Neon City',players:r.players.map(p=>({id:p.id,name:p.name,score:p.score,character:p.character||'Raka'}))}}
 function emit(r,e,d){io.to(r.code).emit(e,d)}
 function stop(r){if(r.tick){clearInterval(r.tick);r.tick=null}}
 function resetPlayer(p,i,keepScore=false){p.x=i?700:100;p.y=330;p.hp=100;if(!keepScore)p.score=0;p.vx=0;p.vy=0;p.dir=i?-1:1;p.attack=0;p.cool=0;p.block=false;p.hitFlash=0;p.stun=0;p.lane=i?1:0;p.progress=0;p.input={left:false,right:false,jump:false,attack:false,block:false,boost:false,kick:false}}
-function start(r){if(r.players.length!==2)return;stop(r);r.playing=true;r.round=0;r.winner=null;r.players.forEach((p,i)=>resetPlayer(p,i));r.roundWins=[0,0];r.roundEndsAt=Date.now()+60000;r.startedAt=Date.now();emit(r,'gameInit',{game:r.game,players:r.players.map(p=>({id:p.id,name:p.name})),round:1});r.tick=setInterval(()=>step(r),50)}
+function start(r){if(r.players.length!==2)return;stop(r);r.playing=true;r.round=0;r.winner=null;r.players.forEach((p,i)=>resetPlayer(p,i));r.roundWins=[0,0];r.roundEndsAt=Date.now()+60000;r.startedAt=Date.now();emit(r,'gameInit',{game:r.game,arena:r.arena,players:r.players.map(p=>({id:p.id,name:p.name,character:p.character})),round:1});r.tick=setInterval(()=>step(r),50)}
 function damage(r,att,amount,kind){
  const target=r.players.find(p=>p.id!==att.id);
  if(!target||target.hp<=0||att.stun>0)return;
@@ -43,9 +44,11 @@ if(r.game!=='Mini Racing'&&r.players.some(p=>p.hp<=0))return;
 if(r.game!=='Mini Racing'&&Date.now()>r.roundEndsAt){const w=r.players[0].hp>=r.players[1].hp?r.players[0]:r.players[1];endRound(r,w,'WAKTU HABIS!');return;}
 emit(r,'world',r.players.map(p=>({id:p.id,x:p.x,y:p.y,hp:p.hp,attack:p.attack,block:p.block,dir:p.dir,hitFlash:p.hitFlash,stun:p.stun,progress:p.progress})).concat([{timer:Math.max(0,Math.ceil((r.roundEndsAt-Date.now())/1000)),round:r.round,roundWins:r.roundWins}]))}
 io.on('connection',s=>{
-s.on('createRoom',({name,mode})=>{const c=code(),m=MODES.includes(mode)?mode:'Online 1v1',players=[{id:s.id,name:String(name||'Pemain 1').slice(0,20)}];if(m==='VS Computer')players.push({id:'BOT',name:'Computer 🤖'});const r={code:c,mode:m,game:'Couple Fighter',players,playing:false,tick:null};resetPlayer(r.players[0],0);rooms.set(c,r);s.join(c);s.data.room=c;s.emit('created',state(r))});
-s.on('joinRoom',({name,code:c})=>{const r=rooms.get(String(c||'').toUpperCase());if(r?.mode==='VS Computer')return s.emit('err','Room ini mode VS Computer.');if(!r)return s.emit('err','Room tidak ditemukan.');if(r.players.length>=2)return s.emit('err','Room sudah penuh.');if(r.playing)return s.emit('err','Battle sedang berjalan.');const p={id:s.id,name:String(name||'Pemain 2').slice(0,20)};resetPlayer(p,1);r.players.push(p);s.join(r.code);s.data.room=r.code;emit(r,'room',state(r))});
+s.on('createRoom',({name,mode})=>{const c=code(),m=MODES.includes(mode)?mode:'Online 1v1',players=[{id:s.id,name:String(name||'Pemain 1').slice(0,20),character:'Raka'}];if(m==='VS Computer')players.push({id:'BOT',name:'Computer 🤖'});const r={code:c,mode:m,game:'Couple Fighter',arena:'Neon City',players,playing:false,tick:null};resetPlayer(r.players[0],0);rooms.set(c,r);s.join(c);s.data.room=c;s.emit('created',state(r))});
+s.on('joinRoom',({name,code:c})=>{const r=rooms.get(String(c||'').toUpperCase());if(r?.mode==='VS Computer')return s.emit('err','Room ini mode VS Computer.');if(!r)return s.emit('err','Room tidak ditemukan.');if(r.players.length>=2)return s.emit('err','Room sudah penuh.');if(r.playing)return s.emit('err','Battle sedang berjalan.');const p={id:s.id,name:String(name||'Pemain 2').slice(0,20),character:'Alya'};resetPlayer(p,1);r.players.push(p);s.join(r.code);s.data.room=r.code;emit(r,'room',state(r))});
 s.on('selectGame',({game})=>{const r=rooms.get(s.data.room);if(!r||r.playing||!GAMES.includes(game))return;r.game=game;emit(r,'room',state(r))});
+s.on('selectCharacter',({character})=>{const r=rooms.get(s.data.room);if(!r||r.playing||!CHARACTERS.includes(character))return;const p=r.players.find(x=>x.id===s.id);if(!p)return;p.character=character;emit(r,'room',state(r))});
+s.on('selectArena',({arena})=>{const r=rooms.get(s.data.room);if(!r||r.playing||!ARENAS.includes(arena)||s.id!==r.players[0]?.id)return;r.arena=arena;emit(r,'room',state(r))});
 s.on('startGame',()=>{const r=rooms.get(s.data.room);if(r&&r.players.length===2)start(r)});
 s.on('setMode',({mode})=>{const r=rooms.get(s.data.room);if(!r||r.playing||!MODES.includes(mode)||s.id!==r.players[0]?.id)return;if(mode==='VS Computer'){r.mode=mode;r.players=[r.players[0],{id:'BOT',name:'Computer 🤖'}];resetPlayer(r.players[1],1)}else{r.mode=mode;r.players=[r.players[0]]}emit(r,'room',state(r))});
 s.on('control',d=>{const r=rooms.get(s.data.room);if(!r||!r.playing)return;const p=r.players.find(x=>x.id===s.id);if(!p)return;p.input={left:!!d.left,right:!!d.right,jump:!!d.jump,attack:!!d.attack,kick:!!d.kick,block:!!d.block,boost:!!d.boost,kick:!!d.kick};if(r.game==='Mini Racing'){p.boost=!!d.boost;return}});
