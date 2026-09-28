@@ -63,3 +63,11 @@ button:active,button.pressed{transform:scale(.95);filter:brightness(1.2)}
 .customPick{margin-top:8px}.customPick h3{margin:12px 0 6px}.choices{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.choices button{min-height:78px;display:grid;place-items:center;font-size:25px;background:#ffffff12}.choices b{font-size:14px}.choices small{font-size:10px;opacity:.7}.choices .chosen{outline:3px solid #fff;background:#ffffff25}.choices button:disabled{opacity:.55}@media(max-width:600px){.choices{grid-template-columns:repeat(2,1fr)}}
 .pickStatus{text-align:center;margin:7px 0;padding:8px 12px;border-radius:12px;background:#ffffff0b;font-size:13px;font-weight:800}.choices small{line-height:1.25;padding:0 3px}@media(max-width:500px){.choices small{font-size:9px}}
 .hpbar{height:7px;background:#0008;border-radius:8px;overflow:hidden;margin:4px 0}.hpbar i{display:block;height:100%;width:100%;background:#55e58b;border-radius:8px;transition:width .12s}.score em{font-style:normal;font-size:11px;opacity:.75}.roundBanner{text-align:center;min-height:0;font-weight:1000;font-size:26px;letter-spacing:2px;text-shadow:0 3px 0 #0008;margin-top:2px}@media(max-width:500px){.roundBanner{font-size:21px}}
+/* final polish */
+.players div{min-height:72px;line-height:1.45}
+.games button,.choices button{transition:transform .12s ease,background .12s ease,outline-color .12s ease}
+.games button:hover,.choices button:hover{background:#ffffff22}
+#arenaHint{text-align:center;font-size:11px;font-weight:900;letter-spacing:1.5px;opacity:.72;margin:2px 0 5px}
+#gameTitle{font-size:16px;letter-spacing:.5px}
+#leave{padding:9px 12px}
+@media(max-width:700px){#arenaHint{font-size:10px}.players div{min-height:64px}}
