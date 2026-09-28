@@ -78,12 +78,17 @@ function step(r){
  if(r.mode==='VS Computer'){
   const bot=r.players[1],me=r.players[0],dist=me.x-bot.x;
   bot.input={left:false,right:false,jump:false,attack:false,kick:false,block:false,boost:false};
-  if(!locked&&r.game!=='Mini Racing'){
-   if(Math.abs(dist)>135){bot.input[dist<0?'left':'right']=true}
-   else if(Math.random()<.16)bot.input.block=true;
-   else if(Math.random()<.72)bot.input.attack=true;
-   if(Math.random()<.035)bot.input.jump=true;
-   if(r.game==='Sword Battle'&&Math.random()<.35)bot.input.attack=true;
+  if(!locked){
+   if(r.game==='Mini Racing'){
+    bot.input.boost=bot.progress<.25||bot.progress>.7||Math.random()<.12;
+   }else{
+    if(Math.abs(dist)>135){bot.input[dist<0?'left':'right']=true}
+    else if(Math.random()<.16)bot.input.block=true;
+    else if(Math.random()<.72)bot.input.attack=true;
+    if(Math.random()<.035)bot.input.jump=true;
+    if(r.game==='Couple Fighter'&&Math.random()<.28)bot.input.kick=true;
+    if(r.game==='Sword Battle'&&Math.random()<.35)bot.input.attack=true;
+   }
   }
  }
  for(const p of r.players){
