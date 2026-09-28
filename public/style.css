@@ -1,6 +1,6 @@
 *{box-sizing:border-box}
 html,body{margin:0;min-height:100%;background:#0b1020}
-body{font-family:system-ui,sans-serif;color:#fff;background:radial-gradient(circle at 15% 0,#8d2e63,transparent 35%),radial-gradient(circle at 100% 80%,#1e4b92,transparent 40%),#0b1020}
+body{font-family:system-ui,sans-serif;overflow-x:hidden;color:#fff;background:radial-gradient(circle at 15% 0,#8d2e63,transparent 35%),radial-gradient(circle at 100% 80%,#1e4b92,transparent 40%),#0b1020}
 main{width:min(1100px,100%);margin:auto;padding:12px}
 .screen{display:none;min-height:calc(100dvh - 24px)}
 .screen.active{display:grid}
@@ -56,3 +56,5 @@ button:active,button.pressed{transform:scale(.95);filter:brightness(1.2)}
  .controls button{min-height:54px;font-size:23px}
  .bigcode{font-size:42px}
 }
+
+@media (orientation:portrait) and (max-width:700px){#game .arena{height:38vh}#game .controls{padding-bottom:env(safe-area-inset-bottom)}}
